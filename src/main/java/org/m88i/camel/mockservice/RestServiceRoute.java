@@ -23,6 +23,12 @@ public class RestServiceRoute extends RouteBuilder {
 	@Value("${server.port}")
 	private Integer serverPort;
 	
+	@Value("${mockservice.sleepSecOrigin}")
+	private Integer sleepSecOrigin;
+	
+	@Value("${mockservice.sleepSecBound}")
+	private Integer sleepSecBound;
+	
 
 	@Override
 	public void configure() throws Exception {
@@ -46,7 +52,7 @@ public class RestServiceRoute extends RouteBuilder {
 				serviceInfo.setTransactionId(UUID.randomUUID().toString());
 				serviceInfo.setPort(serverPort);
 				serviceInfo.setServiceName(SERVICE_NAME);
-				serviceInfo.setSleepSecs(ThreadLocalRandom.current().nextInt(1, 11));
+				serviceInfo.setSleepSecs(ThreadLocalRandom.current().nextInt(sleepSecOrigin, sleepSecBound));
 				serviceInfo.setIp(InetAddress.getLocalHost().getHostAddress());
 				
 				e.getIn().setBody(serviceInfo, ServiceInfo.class);

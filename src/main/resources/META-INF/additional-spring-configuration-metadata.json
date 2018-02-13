@@ -1,0 +1,9 @@
+{"properties": [{
+  "name": "mockservice.sleep-sec-origin",
+  "type": "java.lang.Integer",
+  "description": "The origin of sleep secs for the Random function"
+},{
+  "name": "mockservice.sleep-sec-bound",
+  "type": "java.lang.Integer",
+  "description": "The bound of sleep secs for the Random function"
+}]}
