@@ -31,7 +31,7 @@ locateHome() {
     # In POSIX shells, CDPATH may cause cd to write to stdout
     (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
     
-    SERVICE_HOME=`cd "$DIRNAME/../../target"; pwd`
+    SERVICE_HOME=`cd "$DIRNAME/../target"; pwd`
     if [ ! -d "$SERVICE_HOME" ]; then
         die "SERVICE_HOME is not valid: $SERVICE_HOME"
     fi
