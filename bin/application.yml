@@ -2,6 +2,13 @@ mockservice:
   sleepSecOrigin : 1
   sleepSecBound: 4
 server:
+  connection-timeout: 10000
+  compression:
+    enabled: false
+  tomcat:
+    max-connections: 8192
+    max-threads: 100
+    accept-count: 10
   port: 8081
 camel:
   springboot:
