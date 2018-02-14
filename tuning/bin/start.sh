@@ -55,6 +55,7 @@ startService() {
     GC_OPTS="-XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:$SERVICE_HOME/log/gc.log -verbose:gc"
 
     rm -rf "$SERVICE_HOME/log/*"
+    touch "$SERVICE_HOME/log/gc.log"
 
     # go!
     $JAVA -DLOG_DIR=$SERVICE_HOME $GC_OPTS $JMX_OPTS -jar $SERVICE_JAR --logging.config=file:$START_HOME/logback.xml --spring.config.location=file:$START_HOME/application.yml
