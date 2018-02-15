@@ -1,0 +1,115 @@
+1000/users = 600secs
+
+#1
+MaxThreads = 500
+Error = 4.24%
+TPS = 114.6/sec
+Average = 8022ms
+Total = 76067
+LivePeak = 283
+
+#2
+MaxThreads = 500
+MinSpare = 300
+Error = 4.02%
+TPS = 115.6/sec
+Average = 7949
+Total = 76933
+LivePeak = 325
+
+#3
+MaxThreads = 500
+MinSpare = 450
+AcceptCount = 10
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 4.46%
+TPS = 115.0/sec
+Average = 7957
+Total = 76784
+LivePeak = 475
+
+
+#4 - JVM tuning
+MaxThreads = 500
+MinSpare = 450
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 4.09%
+TPS = 114.5
+Average = 8014
+Total = 76226
+LivePeak = 475
+
+#5 - JVM tuning
+MaxThreads = 1000
+MinSpare = 950
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 3.72%
+TPS = 113.9
+Average = 8050
+Total = 75785
+LivePeak = 974
+
+#6 - JVM tuning
+MaxThreads = 400
+MinSpare = 300
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 3.85%
+TPS = 114.8
+Average = 7686
+Total = 76293
+LivePeak = 325
+
+#7 - JVM tuning
+MaxThreads = 100
+MinSpare = 50
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 9.91%
+TPS = 50.4
+Average = 18421
+Total = 33594
+LivePeak = 125
+
+
+#8 - JVM tuning / Logging Tuning
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 4.33%
+TPS = 114.8
+Average = 7989
+Total = 76384
+LivePeak = 374
+
+
+#9 - JVM tuning / Logging Tuning / No Apache
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 0%
+TPS = 199.1
+Average = 4986
+Total = 120641
+LivePeak = 427
+
+#10 - No Apache
+MaxThreads = 400
+Error = 0%
+TPS = 197
+Average = 5040
+Total = 119336
+LivePeak = 425
+CPU = 40%
+HEAP = 500MB
