@@ -53,12 +53,12 @@ startService() {
     # https://stackoverflow.com/questions/29412072/how-to-access-spring-boot-jmx-remotely
     JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=12348 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.rmi.port=12349"
     GC_OPTS="-XX:+PrintGCApplicationStoppedTime -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:$SERVICE_HOME/log/gc.log -verbose:gc -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$SERVICE_HOME/log/"
-
+    JVM_OPTS="-server -Xms512m -Xmx512m  -XX:MaxNewSize=170m -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=64m -XX:ParallelGCThreads=2"
     rm -rf "$SERVICE_HOME/log/*"
     touch "$SERVICE_HOME/log/gc.log"
 
     # go!
-    $JAVA -DLOG_DIR=$SERVICE_HOME $GC_OPTS $JMX_OPTS -jar $SERVICE_JAR --logging.config=file:$START_HOME/logback.xml --spring.config.location=file:$START_HOME/application.yml
+    $JAVA -DLOG_DIR=$SERVICE_HOME $JVM_OPTS  $GC_OPTS $JMX_OPTS -jar $SERVICE_JAR --logging.config=file:$START_HOME/async-logback.xml --spring.config.location=file:$START_HOME/application.yml
 }
 
 init() {
