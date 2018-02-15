@@ -5,6 +5,11 @@
                         </pattern>
                 </encoder>
         </appender>
+	<appender name="ASYNC-stdout" class="ch.qos.logback.classic.AsyncAppender">
+                <appender-ref ref="STDOUT" />
+		<neverBlock>true</neverBlock>
+		<maxFlushTime>500</maxFlushTime>
+        </appender>
 	<!-- custom logging for splunk -->
 	<appender name="splunk"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -44,13 +49,19 @@
 			</pattern>
 		</layout>
 	</appender>
+	 <appender name="ASYNC-app" class="ch.qos.logback.classic.AsyncAppender">
+                <appender-ref ref="app" />
+                <discardingThreshold>0</discardingThreshold>
+                <queueSize>500</queueSize>
+        </appender>
+
 
 	<logger name="splunk">
 		<appender-ref ref="splunk" />
 	</logger>
 
 	<root level="info">
-		<appender-ref ref="STDOUT" />
-		<appender-ref ref="app" />
+		<appender-ref ref="ASYNC-stdout" />
+		<appender-ref ref="ASYNC-app" />
 	</root>
 </configuration>
