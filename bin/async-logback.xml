@@ -61,7 +61,6 @@
 	</logger>
 
 	<root level="info">
-		<appender-ref ref="ASYNC-stdout" />
 		<appender-ref ref="ASYNC-app" />
 	</root>
 </configuration>

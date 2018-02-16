@@ -6,7 +6,7 @@ server:
   compression:
     enabled: false
   tomcat:
-    max-connections: 8192
+    max-connections: 960
     max-threads: 400
     min-spare-threads: 350
     accept-count: 100
