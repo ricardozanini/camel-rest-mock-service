@@ -113,3 +113,64 @@ Total = 119336
 LivePeak = 425
 CPU = 40%
 HEAP = 500MB
+
+#11 - JVM tuning / Logging Tuning / Apache Tuning
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 2.76
+TPS = 123.7
+Average = 6873
+Total = 89002
+LivePeak = 377
+ThreadLimit         30
+ServerLimit         10
+StartServers        3
+MinSpareThreads     5
+MaxSpareThreads     20
+MaxClients          300
+ThreadsPerChild     30
+MaxRequestsPerChild 0
+
+
+#12 - JVM tuning / Logging Tuning / Apache Tuning
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 1.70%
+TPS = 161.7
+Average = 5174
+Total = 117752
+LivePeak = 427
+ThreadLimit         40
+ServerLimit         10
+StartServers        3
+MinSpareThreads     5
+MaxSpareThreads     20
+MaxClients          400
+ThreadsPerChild     40
+MaxRequestsPerChild 0
+
+#13 - JVM tuning / Logging Tuning / Apache Tuning
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 1.71%
+TPS = 172.6
+Average = 4962
+Total = 122278
+LivePeak = 427
+ThreadLimit         40
+ServerLimit         16
+StartServers        3
+MinSpareThreads     5
+MaxSpareThreads     20
+MaxClients          500
+ThreadsPerChild     40
+MaxRequestsPerChild 0
