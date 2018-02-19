@@ -89,13 +89,14 @@ startService() {
 
     # vars
     JMX_PORT=$DEFAULT_JMX_PORT
+    RMI_PORT=$(( JMX_PORT + 1 ))
     SERVER_PORT=$DEFAULT_S_PORT
     MGMN_PORT=$DEFAULT_M_PORT
 
     for ((S=0; S<$SERVERS; S++))
     do
         # https://stackoverflow.com/questions/29412072/how-to-access-spring-boot-jmx-remotely
-        JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=${JMX_PORT} -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+        JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.rmi.port=${RMI_PORT} -Dcom.sun.management.jmxremote.port=${JMX_PORT} -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
         GC_OPTS="-XX:+PrintGCApplicationStoppedTime -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:$SERVICE_HOME/log/gc.${S}.log -verbose:gc -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$SERVICE_HOME/log/"
         JVM_OPTS="-server -Xmx${MEM}M -Xms${MEM}M -XX:+AggressiveOpts -XX:MetaspaceSize=${META}M -XX:MaxMetaspaceSize=${META}M -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark"
         
@@ -106,10 +107,11 @@ startService() {
 
         echo ">> Started server on port $SERVER_PORT, management port on $MGMN_PORT and JMX remote port on $JMX_PORT"
 
-        JMX_PORT=$((JMX_PORT+1))
+        JMX_PORT=$((JMX_PORT+2))
+        RMI_PORT=$((RMI_PORT+2))
         SERVER_PORT=$((SERVER_PORT+100))
         MGMN_PORT=$((MGMN_PORT+100))
-    done
+    done 
     
 }
 
