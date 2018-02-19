@@ -106,6 +106,11 @@ startService() {
         $JAVA -DLOG_DIR=$SERVICE_HOME -Dserver.port=$SERVER_PORT -Dmanagement.port=$MGMN_PORT $JVM_OPTS  $GC_OPTS $JMX_OPTS -jar $SERVICE_JAR --logging.config=file:$START_HOME/async-logback.xml --spring.config.location=file:$START_HOME/application.yml &
 
         echo ">> Started server on port $SERVER_PORT, management port on $MGMN_PORT and JMX remote port on $JMX_PORT"
+        echo ">> Open ports for JMX monitoring:"
+        echo ">> firewall-cmd --zone=public --add-port=$JMX_PORT/tcp --permanent"
+        echo ">> firewall-cmd --zone=public --add-port=$RMI_PORT/tcp --permanent"
+        echo ">> firewall-cmd --reload"
+        echo ">>"
 
         JMX_PORT=$((JMX_PORT+2))
         RMI_PORT=$((RMI_PORT+2))

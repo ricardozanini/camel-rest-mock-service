@@ -9,10 +9,10 @@ server:
   compression:
     enabled: false
   tomcat:
-    max-connections: 2400
-    max-threads: 1200
-    min-spare-threads: 1000
-    accept-count: 300
+    max-connections: 400
+    max-threads: 200
+    min-spare-threads: 150
+    accept-count: 100
   port: 8081
 camel:
   springboot:
