@@ -6,6 +6,42 @@ Camel Rest Service using Tomcat embeded server within Spring Boot (based on FIS 
 
 [Red Hat repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/fuse_integration_services_2.0_for_openshift/get-started-dev#get-started-configure-maven) **must** be set to run this installation.
 
+## Lab Architecture
+
+For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6GB of RAM and 2 vcores.
+
+```
++-----------+                  +------------------------+
+|           |                  |                        |
+|           |                  |Camel Spring Boot (8081)|
+|           |                  +------------------------+
+|           |
+|           |                  +------------------------+
+|           |                  |                        |
+|           |                  |Camel Spring Boot (8181)|
+|           |                  +------------------------+
+|           |
+|           |                  +------------------------+
+|           |   ProxyPass      |                        |
+|           | +--------------> |Camel Spring Boot (8281)|
+| JBCS 2.4  |                  +------------------------+
+|    Web    |
+|  Server   |                  +------------------------+
+|           |                  |                        |
+|           |                  |Camel Spring Boot (8381)|
+|           |                  +------------------------+
+|           |
+|           |                  +------------------------+
+|           |                  |                        |
+|           |                  |Camel Spring Boot (8481)|
+|           |                  +------------------------+
+|           |
+|           |                  +------------------------+
+|           |                  |                        |
+|           |                  |Camel Spring Boot (8581)|
++-----------+                  +------------------------+
+```
+
 ## Apache server configuration
 
 We're going to expose the service through a Apache Web Server (JBCS from Red Hat `sudo​ ​yum​ ​group​ ​install​ ​jbcs​-​httpd24`):
@@ -43,8 +79,9 @@ firewall-cmd --reload
 
 - [VisualVM](https://visualvm.github.io/) for JVM monitoring
 - [Apache Benchmark Tool](http://httpd.apache.org/docs/current/programs/ab.html) - `yum install httpd-tools` - for load tests
+- [Apache JMeter](http://jmeter.apache.org/)
 
-## Tomcat Tuning
+## Load Test
 
 ## Apache Tunning
 
@@ -86,3 +123,17 @@ Server compiled with....
  -D AP_TYPES_CONFIG_FILE="conf/mime.types"
  -D SERVER_CONFIG_FILE="conf/httpd.conf"
 ```
+
+## Tomcat Tuning
+
+## JVM Tuning
+
+## Logback Tuning
+
+## Apache JMeter
+
+### Generating reports
+
+1. Configure the `user.properties` on JMeter home according to the [dashboard documentation](http://jmeter.apache.org/usermanual/generating-dashboard.html).
+2. Save the CSV result file on the `Aggregate Report` tab (`$PROJECT_HOME/jmeter/results.csv`).
+3. Generate the report after performing the load test by running `jmeter -g jmeter/results.csv -o jmeter/results-output`.

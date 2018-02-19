@@ -4,6 +4,9 @@
 target
 /target
 
+results*
+results*/*
+
 # Compiled class file
 *.class
 
