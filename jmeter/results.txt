@@ -174,3 +174,167 @@ MaxSpareThreads     20
 MaxClients          500
 ThreadsPerChild     40
 MaxRequestsPerChild 0
+
+
+#14 - JVM tuning / Logging Tuning / Apache Tuning
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 1.42%
+TPS = 185.6
+Average = 4969
+Total = 121933
+LivePeak = 427
+ThreadLimit         50
+ServerLimit         16
+StartServers        3
+MinSpareThreads     5
+MaxSpareThreads     20
+MaxClients          500
+ThreadsPerChild     50
+MaxRequestsPerChild 0
+
+
+#15 - JVM tuning / Logging Tuning / Apache Tuning
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 100
+ConnectionTimeout = 10s
+MaxConn = 8192
+Error = 0.98
+TPS = 185.9
+Average = 4975
+Total = 121638
+LivePeak = 427
+ThreadLimit         60
+ServerLimit         16
+StartServers        3
+MinSpareThreads     10
+MaxSpareThreads     50
+MaxClients          600
+ThreadsPerChild     60
+MaxRequestsPerChild 0
+
+#16 - JVM tuning / Logging Tuning / Apache Tuning (worker)
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 50
+ConnectionTimeout = 10s
+MaxConn = 960
+Error = 0
+TPS = 198.2
+Average = 5006
+Total = 120121
+LivePeak = 428
+ThreadLimit         60
+ServerLimit         16
+StartServers        3
+MinSpareThreads     10
+MaxSpareThreads     50
+MaxClients          960
+ThreadsPerChild     60
+MaxRequestsPerChild 0
+
+
+#17 - JVM tuning / Logging Tuning / Apache Tuning (event)
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 50
+ConnectionTimeout = 10s
+MaxConn = 960
+Error = 0
+TPS = 198
+Average = 5012 
+Total = 119976
+LivePeak = 427
+ThreadLimit         60
+ServerLimit         16
+StartServers        3
+MinSpareThreads     10
+MaxSpareThreads     50
+MaxClients          960
+ThreadsPerChild     60
+MaxRequestsPerChild 0
+
+
+#17 - JVM tuning / Logging Tuning / Apache Tuning (event)
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 50
+ConnectionTimeout = 10s
+MaxConn = 960
+Error = 1.07
+TPS = 183.5
+Average = 4967
+Total = 121655
+LivePeak = 427
+ThreadLimit         40
+ServerLimit         15
+StartServers        3
+MinSpareThreads     10
+MaxSpareThreads     40
+MaxRequestWorkers   600
+ThreadsPerChild     40
+MaxRequestsPerChild 0
+
+#18 - JVM tuning / Logging Tuning / Apache Tuning (worker) - recommended Apache MaxClients
+MaxThreads = 300
+MinSpare = 250
+AcceptCount = 50
+ConnectionTimeout = 10s
+MaxConn = 600
+Error = 1.31
+TPS = 132.6
+Average = 6618
+Total = 91449
+LivePeak = 327
+ThreadLimit         40
+ServerLimit         15
+StartServers        3
+MinSpareThreads     10
+MaxSpareThreads     40
+MaxRequestWorkers   600
+ThreadsPerChild     40
+MaxRequestsPerChild 0
+
+#19 - JVM tuning / Logging Tuning / Apache Tuning (worker) - recommended Apache MaxClients / raised tomcat threads
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 50
+ConnectionTimeout = 10s
+MaxConn = 600
+Error = 0.75%
+TPS = 166.4
+Average = 4996
+Total = 121255
+LivePeak = 428
+ThreadLimit         40
+ServerLimit         15
+StartServers        3
+MinSpareThreads     10
+MaxSpareThreads     40
+MaxRequestWorkers   600
+ThreadsPerChild     40
+MaxRequestsPerChild 0
+
+#20 - JVM tuning / Logging Tuning / Apache Tuning (worker) - recommended Apache MaxClients / raised tomcat threads
+MaxThreads = 400
+MinSpare = 350
+AcceptCount = 50
+ConnectionTimeout = 10s
+MaxConn = 800
+Error = 0.84%
+TPS = 175.7
+Average = 4986
+Total = 121148
+LivePeak = 428
+ThreadLimit         40
+ServerLimit         15
+StartServers        3
+MinSpareThreads     10
+MaxSpareThreads     40
+MaxRequestWorkers   600
+ThreadsPerChild     40
+MaxRequestsPerChild 0
