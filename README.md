@@ -12,13 +12,13 @@ For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6
 
 ```
 +-----------+                  +------------------------+
-|           |                  |                        |
-|           |                  |Camel Spring Boot (8081)|
+|           |   ProxyPass      |                        |
+|           | +--------------> |Camel Spring Boot (8081)|
 |           |                  +------------------------+
 |           |
 |           |                  +------------------------+
-|           |                  |                        |
-|           |                  |Camel Spring Boot (8181)|
+|           |   ProxyPass      |                        |
+|           | +--------------> |Camel Spring Boot (8181)|
 |           |                  +------------------------+
 |           |
 |           |                  +------------------------+
@@ -26,20 +26,21 @@ For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6
 |           | +--------------> |Camel Spring Boot (8281)|
 | JBCS 2.4  |                  +------------------------+
 |    Web    |
-|  Server   |                  +------------------------+
-|           |                  |                        |
-|           |                  |Camel Spring Boot (8381)|
+|  Ser^er   |                  +------------------------+
+|           |   ProxyPass      |                        |
+|           | +--------------> |Camel Spring Boot (8381)|
 |           |                  +------------------------+
 |           |
 |           |                  +------------------------+
-|           |                  |                        |
-|           |                  |Camel Spring Boot (8481)|
+|           |   ProxyPass      |                        |
+|           | +--------------> |Camel Spring Boot (8481)|
 |           |                  +------------------------+
 |           |
 |           |                  +------------------------+
-|           |                  |                        |
-|           |                  |Camel Spring Boot (8581)|
+|           |   ProxyPass      |                        |
+|           | +--------------> |Camel Spring Boot (8581)|
 +-----------+                  +------------------------+
+
 ```
 
 ## Apache server configuration
