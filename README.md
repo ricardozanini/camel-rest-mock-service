@@ -10,6 +10,8 @@ Camel Rest Service using Tomcat embeded server within Spring Boot (based on FIS 
 
 For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6GB of RAM and 2 vcores.
 
+There's a Apache Web Server 2.4 acting as a proxy to by pass the HTTP requests to the Camel route exposed as a REST service. The route was created in a Spring Boot within a Tomcat embeded. The diagram bellow illustrates this architecture.
+
 ```
 +-----------+                  +------------------------+
 |           |   ProxyPass      |                        |
@@ -26,7 +28,7 @@ For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6
 |           | +--------------> |Camel Spring Boot (8281)|
 | JBCS 2.4  |                  +------------------------+
 |    Web    |
-|  Ser^er   |                  +------------------------+
+|  Server   |                  +------------------------+
 |           |   ProxyPass      |                        |
 |           | +--------------> |Camel Spring Boot (8381)|
 |           |                  +------------------------+
@@ -40,29 +42,45 @@ For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6
 |           |   ProxyPass      |                        |
 |           | +--------------> |Camel Spring Boot (8581)|
 +-----------+                  +------------------------+
-
 ```
+
+The responsibility of the Apache Web Server is to handle TLS connections and to wrap the ports from the Tomcat servers.
 
 ## Apache server configuration
 
-We're going to expose the service through a Apache Web Server (JBCS from Red Hat `sudo​ ​yum​ ​group​ ​install​ ​jbcs​-​httpd24`):
+First, the Apache Web Server 2.4 must be installed with: `sudo​ ​yum​ ​group​ ​install​ ​jbcs​-​httpd24`. This package should be enabled via `subscription-manager`:
 
-In file the `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.d/camel/mockservice.conf`:
+1. Register your VM with `subscription-manager register --username=<user> --password=<pass>`
+2. Attach a pool with JBCS Core Services: `subscription-manager attach --pool=<poolid>`
+3. Enable the package: `subscription-manager repos --enable=jb-coreservices-1-for-rhel-7-server-rpms`
+
+To leave the services configuration apart from defaults, add a file in the path `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.d/` named `camelservice.conf` with the following contents:
+
+```conf
+ExtendedStatus On
+
+<VirtualHost *:80>
+        IncludeOptional conf.d/camel/*.conf
+</VirtualHost>
+```
+
+Then, in file the `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.d/camel/mockservice.conf`, set up the reverse proxy for the Camel services on the embeded Tomcat. For each Tomcat server, a new `Location` must be set.
 
 ```conf
 # camel service endpoint
-<Location /camel>
+<Location /0/camel>
         ProxyPass http://localhost:8081
         ProxyPassReverse http://localhost:8081
-        ProxyPassReverseCookiePath / /camel
+        ProxyPassReverseCookiePath / /0/camel
 </Location>
-# spring boot actuator
-<Location /camel/mgmnt>
-        ProxyPass http://localhost:8083
-        ProxyPassReverse http://localhost:8083
-        ProxyPassReverseCookiePath / /camel/mgmnt
+
+# server status
+<Location /server-status>
+        SetHandler server-status
 </Location>
 ```
+
+This configuration also enables the [Apache status page](https://httpd.apache.org/docs/2.4/mod/mod_status.html) to use it as a monitoring resource during the load tests execution.
 
 ## Open Firewall ports
 
