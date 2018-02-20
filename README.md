@@ -82,9 +82,11 @@ Then, in file the `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.d/camel/mockservice.
 
 This configuration also enables the [Apache status page](https://httpd.apache.org/docs/2.4/mod/mod_status.html) to use it as a monitoring resource during the load tests execution.
 
+**Tip:** The startup script prints the `Location` configuration.
+
 ## Open Firewall ports
 
-The following ports should be opened on service machine to allow JMX remote connection and service connection:
+The following ports should be opened on the service machine to allow JMX remote connection and service connection:
 
 ```shell
 firewall-cmd --zone=public --add-port=12349/tcp --permanent
@@ -93,6 +95,8 @@ firewall-cmd --zone=public --add-port=80/tcp --permanent
 firewall-cmd --zone=public --add-port=443/tcp --permanent
 firewall-cmd --reload
 ```
+
+**Tip:** The startup script prints the `firewall-cmd` command for each server.
 
 ## Tools
 

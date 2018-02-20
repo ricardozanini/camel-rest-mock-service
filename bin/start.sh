@@ -111,6 +111,12 @@ startService() {
         echo ">> firewall-cmd --zone=public --add-port=$RMI_PORT/tcp --permanent"
         echo ">> firewall-cmd --reload"
         echo ">>"
+        echo ">> Add this Location to your httpd server"
+        echo "<Location /camel/${S}>"
+        echo "  ProxyPass http://localhost:${SERVER_PORT}"
+        echo "  ProxyPassReverse http://localhost:${SERVER_PORT}"
+        echo "  ProxyPassReverseCookiePath / /camel/${S}"
+        echo "</Location>"
 
         JMX_PORT=$((JMX_PORT+2))
         RMI_PORT=$((RMI_PORT+2))
