@@ -98,8 +98,8 @@ startService() {
         # https://stackoverflow.com/questions/29412072/how-to-access-spring-boot-jmx-remotely
         JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.rmi.port=${RMI_PORT} -Dcom.sun.management.jmxremote.port=${JMX_PORT} -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
         GC_OPTS="-XX:+PrintGCApplicationStoppedTime -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:$SERVICE_HOME/log/gc.${S}.log -verbose:gc -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$SERVICE_HOME/log/"
-        JVM_OPTS="-server -Xmx${MEM}M -Xms${MEM}M -XX:+AggressiveOpts -XX:MetaspaceSize=${META}M -XX:MaxMetaspaceSize=${META}M -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark"
-        
+        JVM_OPTS="-server -Xmx${MEM}M -Xms${MEM}M -XX:+AggressiveOpts -XX:MetaspaceSize=${META}M -XX:MaxMetaspaceSize=${META}M -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:+CMSParallelInitialMarkEnabled -XX:+CMSClassUnloadingEnabled -XX:ParallelGCThreads=4 -XX:+ParallelRefProcEnabled"
+         
         touch "$SERVICE_HOME/log/gc.$S.log"
 
         # go!

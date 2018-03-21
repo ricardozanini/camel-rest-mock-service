@@ -44,15 +44,23 @@ There's a Apache Web Server 2.4 acting as a proxy to by pass the HTTP requests t
 +-----------+                  +------------------------+
 ```
 
-The responsibility of the Apache Web Server is to handle TLS connections and to wrap the ports from the Tomcat servers.
+The responsibility of the Apache Web Server is to handle TLS connection and to proxy requests to Tomcat servers, acting as a _gatekeeper_.
+
+## Baseline
+
+The first thing to do is set a desired baseline for the service. For this example let's use 2000 simultaneous requests to the service with a response time of 1.5 seconds.
 
 ## Apache server configuration
+
+### Installation
 
 First, the Apache Web Server 2.4 must be installed with: `sudo​ ​yum​ ​group​ ​install​ ​jbcs​-​httpd24`. This package should be enabled via `subscription-manager`:
 
 1. Register your VM with `subscription-manager register --username=<user> --password=<pass>`
 2. Attach a pool with JBCS Core Services: `subscription-manager attach --pool=<poolid>`
 3. Enable the package: `subscription-manager repos --enable=jb-coreservices-1-for-rhel-7-server-rpms`
+
+### Location Configuration
 
 To leave the services configuration apart from defaults, add a file in the path `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.d/` named `camelservice.conf` with the following contents:
 
@@ -82,7 +90,7 @@ Then, in file the `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.d/camel/mockservice.
 
 This configuration also enables the [Apache status page](https://httpd.apache.org/docs/2.4/mod/mod_status.html) to use it as a monitoring resource during the load tests execution.
 
-**Tip:** The startup script prints the `Location` configuration.
+**Tip:** The startup script (`bin/startup.sh`) prints the `Location` configuration.
 
 ## Open Firewall ports
 
@@ -108,13 +116,34 @@ firewall-cmd --reload
 
 ## Apache Tunning
 
-Refs:
+Take the SLA requirements and try to tune the [MPM](https://httpd.apache.org/docs/2.4/mpm.html) accordinly. It isn't very nice [open a lot of connections](https://httpd.apache.org/docs/trunk/misc/perf-scaling.html#sizing-maxClients) on the Apache Web Server side if the JEE server can't handle it.
 
-1. [Sizing MaxClients](https://httpd.apache.org/docs/trunk/misc/perf-scaling.html#sizing-maxClients)
+This is a _test and retry_ task. Try working on the load tests scenarios to have a number of simultaneous requests that the application can handle in a desired response time. This number should be the `MaxRequestWorkers` MPM `worker` configuration:
+
+```
+<IfModule mpm_worker_module>
+        ThreadLimit         100
+        ServerLimit         20
+        StartServers        20
+        MinSpareThreads     50
+        MaxSpareThreads     100
+        MaxRequestWorkers   2000
+        ThreadsPerChild     100
+        MaxRequestsPerChild 0
+</IfModule>
+```
+
+In this example we're setting the maximum requests to 2000.
+
+### MPM Configuration
+
+Change the default MPM from **`prefork`** to **`worker`**. The `worker` [MPM gives better performance](https://stackoverflow.com/questions/13883646/apache-prefork-vs-worker-mpm) and it's a more suitable for a scenario using Apache Web Server to act as a proxy.
+
+To change to `worker`, just uncomment line `LoadModule mpm_worker_module modules/mod_mpm_worker.so` on file `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.modules.d/00-mpm.conf`. Don't forget to comment the `mod_mpm_prefork.so` MPM.
 
 ### MPM Event Bug
 
-One of the justifications to use worker is a bug on `event`, as stated on [this KCS article from Red Hat](https://access.redhat.com/solutions/3035211): `AH00485: scoreboard is full, not at MaxRequestWorkers`. 
+One of the justifications to use `worker` is a bug on `event`, as stated on [this KCS article from Red Hat](https://access.redhat.com/solutions/3035211): `AH00485: scoreboard is full, not at MaxRequestWorkers`. 
 
 The jbcs-httpd version used on this lab is `2.2.23` (waiting for the fix):
 
