@@ -2,10 +2,6 @@
 
 A Camel Rest Service using Tomcat embedded server within Spring Boot (based on FIS 2.0 by Red Hat) to mock real services to be used on load tests scenarios.
 
-## Maven configuration
-
-[Red Hat repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/fuse_integration_services_2.0_for_openshift/get-started-dev#get-started-configure-maven) **must** be set on target machine to run this service.
-
 ## Lab Architecture
 
 For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6GB of RAM and 2 vcores.
@@ -50,6 +46,10 @@ This strategy allow us to have the following metrics on our APM tool:
 
 1. **Number of connection errors**. If this number increases, it's means that we need to scale up our servers.
 2. **Number of simultaneous requests**. After the load tests we'll have a baseline number of simultaneous requests that we can handle. We can monitor this metric to help us understand the requests volume in the environment and justify a cluster increase.
+
+## Maven configuration
+
+[Red Hat repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/fuse_integration_services_2.0_for_openshift/get-started-dev#get-started-configure-maven) **must** be set on target machine to run this service.
 
 ## Apache server configuration
 
