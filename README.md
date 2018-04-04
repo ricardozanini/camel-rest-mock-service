@@ -1,16 +1,16 @@
 # Camel Rest Mock Service
 
-Camel Rest Service using Tomcat embeded server within Spring Boot (based on FIS 2.0 by Red Hat) to mock real services to be used on load tests scenarios.
+A Camel Rest Service using Tomcat embedded server within Spring Boot (based on FIS 2.0 by Red Hat) to mock real services to be used on load tests scenarios.
 
 ## Maven configuration
 
-[Red Hat repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/fuse_integration_services_2.0_for_openshift/get-started-dev#get-started-configure-maven) **must** be set to run this installation.
+[Red Hat repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/fuse_integration_services_2.0_for_openshift/get-started-dev#get-started-configure-maven) **must** be set on target machine to run this service.
 
 ## Lab Architecture
 
 For this lab, the load tests were performed on a RHEL 7.4 virtual machine with 6GB of RAM and 2 vcores.
 
-There's a Apache Web Server 2.4 acting as a proxy to by pass the HTTP requests to the Camel route exposed as a REST service. The route was created in a Spring Boot within a Tomcat embeded. The diagram bellow illustrates this architecture.
+There's a Apache Web Server 2.4 acting as a proxy to by pass the HTTP requests to the Camel route exposed as a REST service. The route was created in a Spring Boot application with Tomcat embedded. The diagram bellow illustrates this architecture.
 
 ```
 +-----------+                  +------------------------+
@@ -44,11 +44,12 @@ There's a Apache Web Server 2.4 acting as a proxy to by pass the HTTP requests t
 +-----------+                  +------------------------+
 ```
 
-The responsibility of the Apache Web Server is to handle TLS connection and to proxy requests to Tomcat servers, acting as a _gatekeeper_.
+The responsibility of the Apache Web Server is to handle TLS connections and to proxy requests to Tomcat servers. It's also acting as a _gatekeeper_ to only allow a pre determined connections to the Tomcat servers. This way we can deny connections to the client on the web server side, avoiding unnecessary load to the Tomcat servers.
 
-## Baseline
+This strategy allow us to have the following metrics on our APM tool:
 
-The first thing to do is set a desired baseline for the service. For this example let's use 2000 simultaneous requests to the service with a response time of 1.5 seconds.
+1. **Number of connection errors**. If this number increases, it's means that we need to scale up our servers.
+2. **Number of simultaneous requests**. After the load tests we'll have a baseline number of simultaneous requests that we can handle. We can monitor this metric to help us understand the requests volume in the environment and justify a cluster increase.
 
 ## Apache server configuration
 
@@ -114,36 +115,49 @@ firewall-cmd --reload
 
 ## Load Test
 
-## Apache Tunning
+The load test was performed using Apache JMeter. The project can be found in `jmeter/load_test.jmx`. The aim of this test is to maintain a given number of requests during a long period of time. This way we can observe the service behavior under high load and take the necessary actions to meet the desired SLA.
 
-Take the SLA requirements and try to tune the [MPM](https://httpd.apache.org/docs/2.4/mpm.html) accordinly. It isn't very nice [open a lot of connections](https://httpd.apache.org/docs/trunk/misc/perf-scaling.html#sizing-maxClients) on the Apache Web Server side if the JEE server can't handle it.
+## Service SLA
+
+The first thing to do is set a desired SLA for the service. For this example we used 400 simultaneous requests to the service with a response time of 1.5 seconds. The idea is to observe the service behavior during the load tests:
+
+1. If the SLA is too optimistic, the request number could be decreased while tuning the infra-structure. 
+2. If we still have more room to increase, just make it bigger.
+
+There's no secret. A load test process is configure the environment, run tests, observe their behavior and do it all again until the expected goal is met.
+
+## Apache Tuning
+
+Take the SLA requirements and try to tune the [MPM](https://httpd.apache.org/docs/2.4/mpm.html) accordingly. It isn't very nice to [open a lot of connections](https://httpd.apache.org/docs/trunk/misc/perf-scaling.html#sizing-maxClients) on the Apache Web Server side if the JEE server can't handle it.
 
 This is a _test and retry_ task. Try working on the load tests scenarios to have a number of simultaneous requests that the application can handle in a desired response time. This number should be the `MaxRequestWorkers` MPM `worker` configuration:
 
 ```
 <IfModule mpm_worker_module>
-        ThreadLimit         100
-        ServerLimit         20
-        StartServers        20
-        MinSpareThreads     50
-        MaxSpareThreads     100
-        MaxRequestWorkers   2000
-        ThreadsPerChild     100
+        ThreadLimit         40
+        ServerLimit         10
+        StartServers        5
+        MinSpareThreads     5
+        MaxSpareThreads     20
+        MaxRequestWorkers   400
+        ThreadsPerChild     10
         MaxRequestsPerChild 0
 </IfModule>
 ```
 
-In this example we're setting the maximum requests to 2000.
+In this example we're setting the maximum requests to 400.
 
 ### MPM Configuration
 
-Change the default MPM from **`prefork`** to **`worker`**. The `worker` [MPM gives better performance](https://stackoverflow.com/questions/13883646/apache-prefork-vs-worker-mpm) and it's a more suitable for a scenario using Apache Web Server to act as a proxy.
+Change the default MPM from **`prefork`** to **`worker`**. The `worker` [MPM gives better performance](https://stackoverflow.com/questions/13883646/apache-prefork-vs-worker-mpm) and it's a more suitable for a scenario using Apache Web Server acting as a proxy.
 
-To change to `worker`, just uncomment line `LoadModule mpm_worker_module modules/mod_mpm_worker.so` on file `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.modules.d/00-mpm.conf`. Don't forget to comment the `mod_mpm_prefork.so` MPM.
+To change to `worker`, just remove the comment on line `LoadModule mpm_worker_module modules/mod_mpm_worker.so` in file `/opt/rh/jbcs-httpd24/root/etc/httpd/conf.modules.d/00-mpm.conf`. Don't forget to comment the `mod_mpm_prefork.so` MPM. 
+
+There's a [Red Hat article](https://access.redhat.com/solutions/2063063) detailing how to switch the MPM used in Apache Web Server.
 
 ### MPM Event Bug
 
-One of the justifications to use `worker` is a bug on `event`, as stated on [this KCS article from Red Hat](https://access.redhat.com/solutions/3035211): `AH00485: scoreboard is full, not at MaxRequestWorkers`. 
+One of the justifications to use `worker` instead of `event` is a bug on it, as stated on [this KCS article from Red Hat](https://access.redhat.com/solutions/3035211): `AH00485: scoreboard is full, not at MaxRequestWorkers`. 
 
 The jbcs-httpd version used on this lab is `2.2.23` (waiting for the fix):
 
@@ -178,9 +192,39 @@ Server compiled with....
 
 ## Tomcat Tuning
 
+Tuning Tomcat is a matter of configure the `max-connections`, `timeouts`, `threads` and `accept count`. For this lab, the following parameters were set:
+
+```yaml
+server:
+  connection-timeout: 10000
+  compression:
+    enabled: false
+  tomcat:
+    max-connections: 400
+    max-threads: 200
+    min-spare-threads: 150
+    accept-count: 100
+```
+
+It's a matter of test and observe, thought. There isn't a magic number to tune your servers. Check [this article](https://javamaster.wordpress.com/2013/03/13/apache-tomcat-tuning-guide/) written by Terry Cho regarding Tomcat tuning. It's a little bit old, but has valuable information about this topic.
+
+Pay attention on the `max-threads` number. This parameter is to limit the thread number that the Tomcat will create to handle requests. If this number is to high to the number of connections that it's handling, you are spending valuable machine resources. The trick is to test with a lower number and observe the requests metrics until you come up with the magic number for your requirement.
+
 ## JVM Tuning
 
+I have some rules of thumb regarding JVM tuning:
+
+1. Set both `-Xmx` and `-Xms` to the same value
+2. Configure GC logs [accordingly](https://dzone.com/articles/understanding-garbage-collection-log)
+3. Always set `-XX:+HeapDumpOnOutOfMemoryError` and `-XX:HeapDumpPath` so if anytime the server faces an `OutOfMemoryError` at least you [have resources for troubleshooting](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/prepapp002.html)
+
+Take a look at the nice article [Java VM Options You Should Always Use in Production](http://blog.sokolenko.me/2014/11/javavm-options-production.html) published by Anatoliy Sokolenko. There's a bunch of tips regarding JVM tune. Also, Red Hat has a [nice tool](https://access.redhat.com/labs/jvmconfig/) to help set JVM settings (available to subscribers).
+
+There isn't a magic number for JVM heap size. You must run load tests and observe your metrics to configure it correctly.
+
 ## Logback Tuning
+
+
 
 ## Apache JMeter
 
