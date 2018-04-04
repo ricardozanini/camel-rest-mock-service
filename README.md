@@ -206,9 +206,9 @@ server:
     accept-count: 100
 ```
 
-It's a matter of test and observe, thought. There isn't a magic number to tune your servers. Check [this article](https://javamaster.wordpress.com/2013/03/13/apache-tomcat-tuning-guide/) written by Terry Cho regarding Tomcat tuning. It's a little bit old, but has valuable information about this topic.
+It's a matter of test and observe, thought. Check [this article](https://javamaster.wordpress.com/2013/03/13/apache-tomcat-tuning-guide/) written by Terry Cho regarding Tomcat tuning. It's a little bit old, but has valuable information about this topic.
 
-Pay attention on the `max-threads` number. This parameter is to limit the thread number that the Tomcat will create to handle requests. If this number is to high to the number of connections that it's handling, you are spending valuable machine resources. The trick is to test with a lower number and observe the requests metrics until you come up with the magic number for your requirement.
+Pay attention on the `max-threads` number. This parameter is to limit the thread number that the Tomcat will create to handle requests. If this number is to high to the number of connections that it's handling, you are spending valuable machine resources. The trick is to test with a lower number and observe the requests metrics until you come up with the number for your requirement.
 
 ## JVM Tuning
 
@@ -224,9 +224,16 @@ There isn't a magic number for JVM heap size. You must run load tests and observ
 
 ## Logback Tuning
 
+One thing that most people forget about is to configure the server log module:
 
+1. Low the server log verbosity to `INFO` (or `WARN`) unless you have a very good reason to not do so.
+2. Prefer using [async log](https://blog.takipi.com/how-to-instantly-improve-your-java-logging-with-7-logback-tweaks/) to avoid stopping application threads to flush into disk prior to continue its execution.
+
+This lab uses Spring Boot and so Logback to perform logging. To turn on async logging in Logback is [pretty straight forward](https://logback.qos.ch/manual/appenders.html#AsyncAppender). Just be aware to not discard log messages if it isn't desired to, like application's Splunk or Data Dog logs. This behavior can be achieved by setting `discardingThreshold` to 0 and `neverBlock` to 0.
 
 ## Apache JMeter
+
+This is the tool chosen to perform our load test. It's pretty straight forward and can be configured easily. Check the project in `jmeter/load_test.jmx` and configure the parameters accordingly to your necessity.
 
 ### Generating reports
 
