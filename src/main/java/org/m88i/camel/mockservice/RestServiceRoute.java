@@ -43,6 +43,24 @@ public class RestServiceRoute extends RouteBuilder {
 					.outType(ServiceInfo.class)
 				.to("direct:get-service-info");
 		
+	      rest("/" + SERVICE_NAME + "1").description("A small mock service with random response time")
+              .bindingMode(RestBindingMode.json)
+              .consumes("application/json")
+              .produces("application/json")
+                  .get()
+                      .description("Service information")
+                      .outType(ServiceInfo.class)
+                  .to("direct:get-service-info");
+	      
+	       rest("/" + SERVICE_NAME + "2").description("A small mock service with random response time")
+           .bindingMode(RestBindingMode.json)
+           .consumes("application/json")
+           .produces("application/json")
+               .get()
+                   .description("Service information")
+                   .outType(ServiceInfo.class)
+               .to("direct:get-service-info");
+		
 		from("direct:get-service-info")
 			.routeId("get-service-info-route")
 			.tracing()

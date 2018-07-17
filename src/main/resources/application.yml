@@ -1,4 +1,7 @@
 spring:
+  metrics:
+    export:
+      enabled: false
   main:
     banner-mode: 'off'
 mockservice:
@@ -13,3 +16,8 @@ endpoints:
   enabled: true
   health:
     enabled: true
+  metrics:
+    filter:
+      enabled: false
+    enabled: false
+ 
