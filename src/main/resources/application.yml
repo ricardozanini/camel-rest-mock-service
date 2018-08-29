@@ -8,6 +8,8 @@ mockservice:
   sleepSecOrigin: 1
   sleepSecBound: 4
 server:
+  tomcat:
+    ajp-port: 8081
   port: 8080
 camel:
   springboot:

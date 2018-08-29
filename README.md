@@ -59,7 +59,8 @@ First, the Apache Web Server 2.4 must be installed with: `sudo​ ​yum​ ​g
 
 1. Register your VM with `subscription-manager register --username=<user> --password=<pass>`
 2. Attach a pool with JBCS Core Services: `subscription-manager attach --pool=<poolid>`
-3. Enable the package: `subscription-manager repos --enable=jb-coreservices-1-for-rhel-7-server-rpms`
+3. Enable the package for Apache httpd: `subscription-manager repos --enable=jb-coreservices-1-for-rhel-7-server-rpms`
+4. Enable the package for JWS 3: `subscription-manager repos --enable=jws-3-for-rhel-7-server-rpms`
 
 ### Location Configuration
 
@@ -142,6 +143,8 @@ This is a _test and retry_ task. Try working on the load tests scenarios to have
         MaxRequestWorkers   400
         ThreadsPerChild     10
         MaxRequestsPerChild 0
+        Timeout             10
+        ProxyTimeout        10
 </IfModule>
 ```
 

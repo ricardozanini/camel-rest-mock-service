@@ -9,7 +9,8 @@ server:
   compression:
     enabled: false
   tomcat:
-    max-connections: 400
+    ajp-port: 8082
+    max-connections: 402
     max-threads: 200
     min-spare-threads: 150
     accept-count: 100
