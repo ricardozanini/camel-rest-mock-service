@@ -243,3 +243,15 @@ This is the tool chosen to perform our load test. It's pretty straight forward a
 1. Configure the `user.properties` on JMeter home according to the [dashboard documentation](http://jmeter.apache.org/usermanual/generating-dashboard.html).
 2. Save the CSV result file on the `Aggregate Report` tab (`$PROJECT_HOME/jmeter/results.csv`).
 3. Generate the report after performing the load test by running `jmeter -g jmeter/results.csv -o jmeter/results-output`.
+
+
+
+## References
+
+https://access.redhat.com/solutions/32598
+https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/3.1/html/installation_guide/installing_jboss_web_server_on_red_hat_enterprise_linux#rhel_rpm
+https://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/html/howto-embedded-servlet-containers.html
+https://github.com/onready/spring-boot-embedded-tomcat-ajp
+https://tomcat.apache.org/tomcat-8.0-doc/config/ajp.html
+https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html
+https://access.redhat.com/labs/lbconfig/#%2F%3FMjR4LDEsNCxXb3JrZXIsbW9kX3Byb3h5LG1jYXN0LHRjLDQsMSwxLGZhbHNlLHRydWUsZmFsc2UsMTA=
