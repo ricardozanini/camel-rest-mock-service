@@ -1,3 +1,5 @@
+***Note**: This repository has been deprecated in favor of https://github.com/ricardozanini/camel-spring-boot-tuning*
+
 # Camel Rest Mock Service
 
 A Camel Rest Service using Tomcat embedded server within Spring Boot (based on FIS 2.0 by Red Hat) to mock real services to be used on load tests scenarios.
